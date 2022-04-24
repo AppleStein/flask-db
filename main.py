@@ -1,11 +1,14 @@
-from sqlalchemy import create_engine, Column, String, Integer
+import string
+from sqlalchemy import DATETIME, create_engine, Column, String, Integer
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
 
 #user.dbを使う宣言
-engine = create_engine('sqlite:///qpp.db')
+engine = create_engine('sqlite:///user.db')
 #dbテーブルの親
 Base = declarative_base()
+
+
 
 #pythonではインスタンスとしてデータを使う
 class User(Base):
@@ -17,14 +20,20 @@ class User(Base):
     def __repr__(self):
         return "User<{}, {}, {}>".format(self.id, self.email, self.name)
 
+
+class Content(Base):
+    __tablename__ = 'contents'
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    content = Column(string)
+    timestamp = Column(DATETIME)
+
+    def __repr__(self):
+        return "Content<{}, {}, {}>".format(self.id, self.name, self.content, self.timestamp)
+
+
 #db構築する
 Base.metadata.create_all(engine)
 #pythonとdbの経路->作成
 SessionMaker = sessionmaker(bind=engine)
-session = SessionMaker()
-
-#idは自動
-user1 = User(email="thisisme@test.com", name="Python")
-#user1をdbに入れる準備->格納
-session.add(user1)
-session.commit()
+session = scoped_session(SessionMaker)
