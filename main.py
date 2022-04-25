@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 
 #user.dbを使う宣言
-engine = create_engine('sqlite:///user.db')
+engine = create_engine('sqlite:///app.db')
 #dbテーブルの親
 Base = declarative_base()
 
@@ -13,12 +13,11 @@ Base = declarative_base()
 #pythonではインスタンスとしてデータを使う
 class User(Base):
     __tablename__ = 'users'
-    id = Column(Integer, primary_key=True, unique=True)
-    email = Column(String)
-    name = Column(String)
+    name = Column(String, primary_key = True, unique = True)
+    pssw = Column(String)
 
     def __repr__(self):
-        return "User<{}, {}, {}>".format(self.id, self.email, self.name)
+        return "User<{}, {}, {}>".format(self.name)
 
 
 class Content(Base):
