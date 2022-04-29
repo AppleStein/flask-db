@@ -9,24 +9,20 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 
 
 app = Flask(__name__)
-#user.dbを使う宣言
-engine = create_engine('sqlite:///app.db')
-#dbテーブルの親
+
+engine = create_engine('sqlite:///app.db', echo = True)
 Base = declarative_base()
 
-
-
-#pythonではインスタンスとしてデータを使う
 class User(Base):
     __tablename__ = 'users'
-    #ユーザとパスワードを自動生成
+    
     name = Column(String, primary_key = True, unique = True)
     passw = Column(String)
 
     def __repr__(self):
         return "User<{}, {}, {}>".format(self.name)
 
-#投稿
+
 class Content(Base):
     __tablename__ = 'contents'
     id = Column(Integer, primary_key=True)
@@ -38,9 +34,9 @@ class Content(Base):
         return "Content<{}, {}, {}, {}>".format(self.id, self.name, self.content, self.timestamp)
 
 
-#db構築する
+
 Base.metadata.create_all(engine)
-#pythonとdbの経路->作成
+
 SessionMaker = sessionmaker(bind=engine)
 session = scoped_session(SessionMaker)
 
